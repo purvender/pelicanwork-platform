@@ -1,0 +1,14 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# macOS thumbnail cache
+.DS_Store?
+._.DS_Store?
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
