@@ -1,4 +1,5 @@
 package com.pelicanwork.pelicanwork_backend.entity;
+
 import jakarta.persistence.*;
 import java.time.Instant;
 
@@ -10,10 +11,10 @@ public class Organization {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", length = 500)
     private String description;
 
     @Column(name = "created_at")
@@ -40,6 +41,7 @@ public class Organization {
     public Instant getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(Instant updatedAt) { this.updatedAt = updatedAt; }
 
+    // Helper methods
     @PrePersist
     protected void onCreate() {
         createdAt = Instant.now();
@@ -49,5 +51,14 @@ public class Organization {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = Instant.now();
+    }
+
+    @Override
+    public String toString() {
+        return "Organization{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }
