@@ -2,25 +2,15 @@ package com.pelicanwork.pelicanwork_backend.dto;
 
 import java.time.Instant;
 
-public class OrganizationResponse {
+public class CategoryResponse {
     private Long id;
     private String name;
     private String description;
+    private Long parentId;
     private Instant createdAt;
     private Instant updatedAt;
-    private Integer memberCount;
 
-    public OrganizationResponse() {}
-
-    public OrganizationResponse(Long id, String name, String description, 
-                                Instant createdAt, Instant updatedAt, Integer memberCount) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.memberCount = memberCount;
-    }
+    public CategoryResponse() {}
 
     // Getters and Setters
     public Long getId() { return id; }
@@ -32,12 +22,12 @@ public class OrganizationResponse {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
+    public Long getParentId() { return parentId; }
+    public void setParentId(Long parentId) { this.parentId = parentId; }
+
     public Instant getCreatedAt() { return createdAt; }
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
 
     public Instant getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(Instant updatedAt) { this.updatedAt = updatedAt; }
-
-    public Integer getMemberCount() { return memberCount; }
-    public void setMemberCount(Integer memberCount) { this.memberCount = memberCount; }
 }

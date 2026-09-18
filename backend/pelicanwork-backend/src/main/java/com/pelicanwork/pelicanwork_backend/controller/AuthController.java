@@ -8,71 +8,94 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = "*")
 public class AuthController {
 
     @Autowired
     private UserService userService;
 
+    /**
+     * POST /api/auth/register
+     * Register a new user
+     */
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<?> register(@Valid @RequestBody AuthRequest request) {
         try {
-            User user = userService.registerUser(request);
-            
-            AuthResponse response = new AuthResponse(
-                "User registered successfully!",
-                user.getId(),
-                user.getEmail()
+            System.out.println("Registering user: " + request.getEmail());
+
+            User user = userService.registerUser(
+                request.getEmail(),
+                request.getPassword(),
+                request.getName(),
+                request.getPhone()
             );
-            
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", "SUCCESS");
+            response.put("message", "User registered successfully");
+            response.put("data", new AuthResponse(user.getId(), user.getEmail(), user.getName()));
+
             return ResponseEntity.ok(response);
-            
+
         } catch (RuntimeException e) {
-            AuthResponse response = new AuthResponse(
-                e.getMessage(),
-                null,
-                null
-            );
-            return ResponseEntity.badRequest().body(response);
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(error);
+        } catch (Exception e) {
+            System.err.println("Error registering user: " + e.getMessage());
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Failed to register user: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(error);
         }
     }
 
+    /**
+     * POST /api/auth/login
+     * Login user and return JWT token
+     */
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@Valid @RequestBody AuthRequest request) {
         try {
-            String token = userService.loginUser(request);
-            User user = userService.findByEmail(request.getEmail());
-            
-            LoginResponse response = new LoginResponse(
-                token,
-                user.getEmail(),
-                user.getId(),
-                user.getFirstName(),
-                user.getLastName()
+            System.out.println("Logging in user: " + request.getEmail());
+
+            AuthResponse authResponse = userService.authenticateUser(
+                request.getEmail(),
+                request.getPassword()
             );
-            
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", "SUCCESS");
+            response.put("message", "Login successful");
+            response.put("data", authResponse);
+
             return ResponseEntity.ok(response);
-            
+
         } catch (RuntimeException e) {
-            LoginResponse response = new LoginResponse(
-                null,
-                null,
-                null,
-                null,
-                null
-            );
-            return ResponseEntity.badRequest().body(response);
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(error);
+        } catch (Exception e) {
+            System.err.println("Error logging in user: " + e.getMessage());
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Failed to login: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(error);
         }
     }
 
+    /**
+     * GET /api/auth/me
+     * Get current authenticated user
+     */
     @GetMapping("/me")
-    public ResponseEntity<AuthResponse> getCurrentUser() {
-        AuthResponse response = new AuthResponse(
-            "Authentication endpoint - User context will be available after JWT filter implementation",
-            null,
-            null
-        );
+    public ResponseEntity<?> getCurrentUser() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "SUCCESS");
+        response.put("message", "Authentication endpoint - User context will be available after JWT filter implementation");
         return ResponseEntity.ok(response);
     }
 }

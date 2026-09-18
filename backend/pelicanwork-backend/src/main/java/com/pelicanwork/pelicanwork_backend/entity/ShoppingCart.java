@@ -4,18 +4,16 @@ import jakarta.persistence.*;
 import java.time.Instant;
 
 @Entity
-@Table(name = "organizations")
-public class Organization {
+@Table(name = "shopping_carts")
+public class ShoppingCart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
-    private String name;
-
-    @Column(columnDefinition = "TEXT", length = 500)
-    private String description;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", unique = true)
+    private User user;
 
     @Column(name = "created_at")
     private Instant createdAt;
@@ -23,17 +21,14 @@ public class Organization {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
-    public Organization() {}
+    public ShoppingCart() {}
 
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 
     public Instant getCreatedAt() { return createdAt; }
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
@@ -41,7 +36,6 @@ public class Organization {
     public Instant getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(Instant updatedAt) { this.updatedAt = updatedAt; }
 
-    // Helper methods
     @PrePersist
     protected void onCreate() {
         createdAt = Instant.now();
@@ -51,14 +45,5 @@ public class Organization {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = Instant.now();
-    }
-
-    @Override
-    public String toString() {
-        return "Organization{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                '}';
     }
 }

@@ -11,17 +11,23 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 255)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String password;
 
-    @Column(name = "first_name")
-    private String firstName;
+    @Column(nullable = false, length = 255)
+    private String name;
 
-    @Column(name = "last_name")
-    private String lastName;
+    @Column(length = 20)
+    private String phone;
+
+    @Column(columnDefinition = "TEXT")
+    private String shippingAddress;
+
+    @Column(columnDefinition = "TEXT")
+    private String billingAddress;
 
     @Column(name = "created_at")
     private Instant createdAt;
@@ -41,11 +47,17 @@ public class User {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
-    public String getFirstName() { return firstName; }
-    public void setFirstName(String firstName) { this.firstName = firstName; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getLastName() { return lastName; }
-    public void setLastName(String lastName) { this.lastName = lastName; }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+
+    public String getShippingAddress() { return shippingAddress; }
+    public void setShippingAddress(String shippingAddress) { this.shippingAddress = shippingAddress; }
+
+    public String getBillingAddress() { return billingAddress; }
+    public void setBillingAddress(String billingAddress) { this.billingAddress = billingAddress; }
 
     public Instant getCreatedAt() { return createdAt; }
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
@@ -53,6 +65,7 @@ public class User {
     public Instant getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(Instant updatedAt) { this.updatedAt = updatedAt; }
 
+    // Helper methods
     @PrePersist
     protected void onCreate() {
         createdAt = Instant.now();
@@ -62,5 +75,15 @@ public class User {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = Instant.now();
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                '}';
     }
 }

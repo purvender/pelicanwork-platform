@@ -1,23 +1,26 @@
 package com.pelicanwork.pelicanwork_backend.entity;
+
 import jakarta.persistence.*;
 import java.time.Instant;
 
 @Entity
-@Table(name = "workspaces")
-public class Workspace {
+@Table(name = "cart_items")
+public class CartItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "organization_id", nullable = false)
-    private Long organizationId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cart_id", nullable = false)
+    private ShoppingCart cart;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_variant_id", nullable = false)
+    private ProductVariant productVariant;
 
     @Column(nullable = false)
-    private String name;
-
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    private Integer quantity = 1;
 
     @Column(name = "created_at")
     private Instant createdAt;
@@ -25,20 +28,20 @@ public class Workspace {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
-    public Workspace() {}
+    public CartItem() {}
 
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Long getOrganizationId() { return organizationId; }
-    public void setOrganizationId(Long organizationId) { this.organizationId = organizationId; }
+    public ShoppingCart getCart() { return cart; }
+    public void setCart(ShoppingCart cart) { this.cart = cart; }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public ProductVariant getProductVariant() { return productVariant; }
+    public void setProductVariant(ProductVariant productVariant) { this.productVariant = productVariant; }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public Integer getQuantity() { return quantity; }
+    public void setQuantity(Integer quantity) { this.quantity = quantity; }
 
     public Instant getCreatedAt() { return createdAt; }
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
